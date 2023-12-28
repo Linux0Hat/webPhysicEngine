@@ -240,7 +240,5 @@ function renderLoop() {
   FpsTimer = new Date().getTime();
 }
 
+setInterval(computingLoop);
 renderLoop();
-while (true) {
-  computingLoop();
-}
