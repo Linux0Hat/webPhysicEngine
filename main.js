@@ -9,46 +9,41 @@ var speed = 1;
 var gravityX = 0 * meterSize;
 var gravityY = 0 * meterSize;
 
-function Init() {
+async function Init() {
   console.log("Web Physic Engine by Linux_Hat dev-0.1");
-  objects = {
-    border: {
-      type: "circle",
-      x: 150,
-      y: 400,
-      vx: 0,
-      vy: 0,
-      radius: 70,
-      color: "#000000",
-      mass: 1,
-      freeze: true,
-      restitution_coef: 1,
-    },
-    obj1: {
-      type: "circle",
-      x: 400,
-      y: 400,
-      vx: 0,
-      vy: 0,
-      radius: 70,
-      color: "#FF0000",
-      mass: 1,
-      freeze: false,
-      restitution_coef: 1,
-    },
-    obj2: {
-      type: "circle",
-      x: 600,
-      y: 400,
-      vx: -150,
-      vy: 0,
-      radius: 70,
-      color: "#FF0000",
-      mass: 100,
-      freeze: false,
-      restitution_coef: 1,
-    },
-  };
+  function get_param(param) {
+    var vars = {};
+    window.location.href
+      .replace(location.hash, "")
+      .replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) {
+        vars[key] = value !== undefined ? value : "";
+      });
+    if (param) {
+      return vars[param] ? vars[param] : null;
+    }
+    return vars;
+  }
+  var config_file = get_param("config");
+  if (!config_file) {
+    config_file = "default.json";
+  }
+  try {
+    const reponse = await fetch(config_file);
+
+    if (!reponse.ok) {
+      throw new Error(`Error loading JSON file: ${reponse.status}`);
+    }
+
+    const data = await reponse.json();
+
+    objects = data.objects;
+    meterSize = data.meterSize;
+    speed = data.speed;
+    gravityX = data.gravityX * meterSize;
+    gravityY = data.gravityY * meterSize;
+  } catch (erreur) {
+    console.error("Error while loading JSON file: ", erreur.message);
+  }
   Timer = new Date().getTime();
   FpsTimer = new Date().getTime();
   collisions = 0;

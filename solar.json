@@ -1,0 +1,44 @@
+{
+  "meterSize": 100,
+  "speed": 1,
+  "gravityX": 0,
+  "gravityY": 0,
+  "objects": {
+    "sun": {
+      "type": "circle",
+      "x": 400,
+      "y": 400,
+      "vx": 0,
+      "vy": 0,
+      "radius": 50,
+      "color": "#FF0000",
+      "mass": 8000000000,
+      "freeze": true,
+      "restitution_coef": 0.5
+    },
+    "circle1": {
+      "type": "circle",
+      "x": 400,
+      "y": 100,
+      "vx": 800,
+      "vy": 0,
+      "radius": 20,
+      "color": "#0000FF",
+      "mass": 1000,
+      "freeze": false,
+      "restitution_coef": 0.5
+    },
+    "circle2": {
+      "type": "circle",
+      "x": 600,
+      "y": 100,
+      "vx": -600,
+      "vy": -200,
+      "radius": 10,
+      "color": "#00FF00",
+      "mass": 500,
+      "freeze": false,
+      "restitution_coef": 0.5
+    }
+  }
+}

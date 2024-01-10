@@ -1,0 +1,44 @@
+{
+  "meterSize": 100,
+  "speed": 1,
+  "gravityX": 0,
+  "gravityY": 9.81,
+  "objects": {
+    "border1": {
+      "type": "circle",
+      "x": 0,
+      "y": 800,
+      "vx": 0,
+      "vy": 0,
+      "radius": 400,
+      "color": "#FF0000",
+      "mass": 100,
+      "freeze": true,
+      "restitution_coef": 0.5
+    },
+    "border2": {
+      "type": "circle",
+      "x": 800,
+      "y": 800,
+      "vx": 0,
+      "vy": 0,
+      "radius": 400,
+      "color": "#FF0000",
+      "mass": 100,
+      "freeze": true,
+      "restitution_coef": 0.5
+    },
+    "obj1": {
+      "type": "circle",
+      "x": 50,
+      "y": 200,
+      "vx": 0,
+      "vy": -200,
+      "radius": 20,
+      "color": "#0000FF",
+      "mass": 10,
+      "freeze": false,
+      "restitution_coef": 0.75
+    }
+  }
+}
