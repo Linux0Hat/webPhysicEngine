@@ -12,8 +12,8 @@
       "vy": 0,
       "radius": 50,
       "color": "#FF0000",
-      "mass": 8000000000,
-      "freeze": true,
+      "mass": 3200000000000,
+      "freeze": false,
       "restitution_coef": 0.5
     },
     "circle1": {

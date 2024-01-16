@@ -193,10 +193,10 @@ function gravityBetweenObjects(objects) {
     var F = ((G * (object.mass * object_.mass)) / (d * d)) * meterSize;
     var a = Math.atan2(deltaY, deltaX);
     var t = ((new Date().getTime() - Timer) / 1000) * speed;
-    object.vx += F * t * Math.cos(a);
-    object.vy += F * t * Math.sin(a);
-    object_.vx -= F * t * Math.cos(a);
-    object_.vy -= F * t * Math.sin(a);
+    object.vx += (F * t * Math.cos(a)) / object.mass;
+    object.vy += (F * t * Math.sin(a)) / object.mass;
+    object_.vx -= (F * t * Math.cos(a)) / object_.mass;
+    object_.vy -= (F * t * Math.sin(a)) / object_.mass;
   }
 }
 
