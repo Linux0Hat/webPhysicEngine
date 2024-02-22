@@ -8,6 +8,7 @@ var meterSize = 100;
 var speed = 1;
 var gravityX = 0 * meterSize;
 var gravityY = 0 * meterSize;
+var cameraPos = [0, 0];
 
 async function Init() {
   console.log("Web Physic Engine by Linux_Hat dev-0.1");
@@ -56,7 +57,12 @@ function drawObjects(objects) {
 
     if (object.type === "box") {
       ctx.beginPath();
-      ctx.rect(object.x, object.y, object.width, object.height);
+      ctx.rect(
+        object.x - cameraPos[0],
+        object.y - cameraPos[1],
+        object.width,
+        object.height
+      );
       ctx.fillStyle = object.color;
       ctx.fill();
       ctx.closePath();
@@ -64,7 +70,13 @@ function drawObjects(objects) {
 
     if (object.type === "circle") {
       ctx.beginPath();
-      ctx.arc(object.x, object.y, object.radius, 0, Math.PI * 2);
+      ctx.arc(
+        object.x - cameraPos[0],
+        object.y - cameraPos[1],
+        object.radius,
+        0,
+        Math.PI * 2
+      );
       ctx.fillStyle = object.color;
       ctx.fill();
       ctx.closePath();
@@ -104,6 +116,9 @@ function collideObjects(objects) {
     var pair = pairs[i];
     var object = objects[pair[0]];
     var object_ = objects[pair[1]];
+    if (!object.collision || !object_.collision) {
+      continue;
+    }
     const deltaX = object_.x - object.x;
     const deltaY = object_.y - object.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -193,10 +208,10 @@ function gravityBetweenObjects(objects) {
     var F = ((G * (object.mass * object_.mass)) / (d * d)) * meterSize;
     var a = Math.atan2(deltaY, deltaX);
     var t = ((new Date().getTime() - Timer) / 1000) * speed;
-    object.vx += (F * t * Math.cos(a)) / object.mass;
-    object.vy += (F * t * Math.sin(a)) / object.mass;
-    object_.vx -= (F * t * Math.cos(a)) / object_.mass;
-    object_.vy -= (F * t * Math.sin(a)) / object_.mass;
+    object.vx += F * t * Math.cos(a);
+    object.vy += F * t * Math.sin(a);
+    object_.vx -= F * t * Math.cos(a);
+    object_.vy -= F * t * Math.sin(a);
   }
 }
 
@@ -230,6 +245,12 @@ function renderLoop() {
   var fps = 1000 / (new Date().getTime() - FpsTimer);
   document.getElementById("fps").innerText = fps.toFixed(2);
   document.getElementById("collisions").innerText = collisions;
+  if (objects) {
+    cameraPos = [
+      objects[Object.keys(objects)[0]].x - canvas.width / 2,
+      objects[Object.keys(objects)[0]].y - canvas.height / 2,
+    ];
+  }
   drawObjects(objects);
   requestAnimationFrame(renderLoop);
   FpsTimer = new Date().getTime();

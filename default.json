@@ -14,7 +14,8 @@
       "color": "#FF0000",
       "mass": 100,
       "freeze": true,
-      "restitution_coef": 0.5
+      "restitution_coef": 0.5,
+      "collision": true
     },
     "border2": {
       "type": "circle",
@@ -26,7 +27,8 @@
       "color": "#FF0000",
       "mass": 100,
       "freeze": true,
-      "restitution_coef": 0.5
+      "restitution_coef": 0.5,
+      "collision": true
     },
     "obj1": {
       "type": "circle",
@@ -38,7 +40,8 @@
       "color": "#0000FF",
       "mass": 10,
       "freeze": false,
-      "restitution_coef": 0.75
+      "restitution_coef": 0.75,
+      "collision": true
     }
   }
 }

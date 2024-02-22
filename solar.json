@@ -12,33 +12,36 @@
       "vy": 0,
       "radius": 50,
       "color": "#FF0000",
-      "mass": 3200000000000,
+      "mass": 820000000,
       "freeze": false,
-      "restitution_coef": 0.5
+      "restitution_coef": 0.5,
+      "collision": true
     },
     "circle1": {
       "type": "circle",
       "x": 400,
       "y": 100,
-      "vx": 800,
+      "vx": 400,
       "vy": 0,
       "radius": 20,
       "color": "#0000FF",
       "mass": 1000,
       "freeze": false,
-      "restitution_coef": 0.5
+      "restitution_coef": 0.5,
+      "collision": true
     },
     "circle2": {
       "type": "circle",
       "x": 600,
       "y": 100,
-      "vx": -600,
+      "vx": -300,
       "vy": -200,
       "radius": 10,
       "color": "#00FF00",
       "mass": 500,
       "freeze": false,
-      "restitution_coef": 0.5
+      "restitution_coef": 0.5,
+      "collision": true
     }
   }
 }
