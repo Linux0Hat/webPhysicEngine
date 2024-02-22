@@ -1,3 +1,5 @@
+console.log("Web Physic Engine by Linux_Hat dev-0.1");
+
 var canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 var Timer;
@@ -11,7 +13,6 @@ var gravityY = 0 * meterSize;
 var cameraPos = [0, 0];
 
 async function Init() {
-  console.log("Web Physic Engine by Linux_Hat dev-0.1");
   function get_param(param) {
     var vars = {};
     window.location.href
@@ -174,7 +175,6 @@ function collideObjects(objects) {
         const bounceY =
           (impulse * object.mass * deltaY) / distance +
           restitution_coef * ((impulse * object.mass * deltaY) / distance);
-        console.log([bounceX, bounceY]);
         object.vx += bounceX;
         object.vy += bounceY;
       } else {
@@ -226,7 +226,6 @@ function getPairs(objects) {
       pairs.push([objects_list[i], objects_list[j]]);
     }
   }
-  console.log(pairs);
   return pairs;
 }
 
