@@ -167,14 +167,14 @@ function collideObjects(objects) {
         object_.vy -= bounceY;
       } else if (object_.freeze) {
         const impulse =
-          (2 * dotProduct) / (distance * (object_.mass + object_.mass));
+          (2 * dotProduct) / (distance * (object.mass + object.mass));
         const bounceX =
           (impulse * object.mass * deltaX) / distance +
           restitution_coef * ((impulse * object.mass * deltaX) / distance);
         const bounceY =
           (impulse * object.mass * deltaY) / distance +
           restitution_coef * ((impulse * object.mass * deltaY) / distance);
-
+        console.log([bounceX, bounceY]);
         object.vx += bounceX;
         object.vy += bounceY;
       } else {
@@ -226,6 +226,7 @@ function getPairs(objects) {
       pairs.push([objects_list[i], objects_list[j]]);
     }
   }
+  console.log(pairs);
   return pairs;
 }
 

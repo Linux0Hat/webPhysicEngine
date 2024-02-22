@@ -4,6 +4,19 @@
   "gravityX": 0,
   "gravityY": 9.81,
   "objects": {
+    "obj1": {
+      "type": "circle",
+      "x": 50,
+      "y": 200,
+      "vx": 0,
+      "vy": -200,
+      "radius": 20,
+      "color": "#0000FF",
+      "mass": 10,
+      "freeze": false,
+      "restitution_coef": 0.8,
+      "collision": true
+    },
     "border1": {
       "type": "circle",
       "x": 0,
@@ -28,19 +41,6 @@
       "mass": 100,
       "freeze": true,
       "restitution_coef": 0.5,
-      "collision": true
-    },
-    "obj1": {
-      "type": "circle",
-      "x": 50,
-      "y": 200,
-      "vx": 0,
-      "vy": -200,
-      "radius": 20,
-      "color": "#0000FF",
-      "mass": 10,
-      "freeze": false,
-      "restitution_coef": 0.75,
       "collision": true
     }
   }
