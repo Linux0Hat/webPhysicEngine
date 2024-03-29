@@ -286,7 +286,7 @@ function getPairs(objects) {
 
 Init();
 
-function computingLoop() {
+function mainLoop() {
   var tps = 1000 / (new Date().getTime() - Timer);
   document.getElementById("tps").innerText = tps.toFixed(0);
   updateObjectsPosition(objects);
@@ -301,15 +301,15 @@ function renderLoop() {
   document.getElementById("fps").innerText = fps.toFixed(2);
   document.getElementById("collisions").innerText = collisions;
   if (objects) {
-    //    cameraPos = [
-    //      objects[Object.keys(objects)[0]].x - canvas.width / 2,
-    //      objects[Object.keys(objects)[0]].y - canvas.height / 2,
-    //    ];
+    cameraPos = [
+      objects[Object.keys(objects)[0]].x - canvas.width / 2,
+      objects[Object.keys(objects)[0]].y - canvas.height / 2,
+    ];
   }
   drawObjects(objects);
   requestAnimationFrame(renderLoop);
   FpsTimer = new Date().getTime();
 }
 
-setInterval(computingLoop);
+setInterval(mainLoop);
 renderLoop();
