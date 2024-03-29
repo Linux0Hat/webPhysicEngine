@@ -1,0 +1,35 @@
+{
+  "meterSize": 100,
+  "speed": 1,
+  "gravityX": 0,
+  "gravityY": 0,
+  "objects": {
+    "border1": {
+      "type": "box",
+      "x": 400,
+      "y": 400,
+      "vx": 0,
+      "vy": 0,
+      "width": 800,
+      "height": 200,
+      "color": "#FF0000",
+      "mass": 100,
+      "freeze": false,
+      "restitution_coef": 0.5,
+      "collision": true
+    },
+    "obj1": {
+      "type": "ball",
+      "x": 200,
+      "y": 200,
+      "vx": 200,
+      "vy": 200,
+      "radius": 20,
+      "color": "#0000FF",
+      "mass": 10,
+      "freeze": false,
+      "restitution_coef": 0.8,
+      "collision": true
+    }
+  }
+}

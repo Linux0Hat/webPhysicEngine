@@ -59,8 +59,8 @@ function drawObjects(objects) {
     if (object.type === "box") {
       ctx.beginPath();
       ctx.rect(
-        object.x - cameraPos[0],
-        object.y - cameraPos[1],
+        object.x - object.width / 2 - cameraPos[0],
+        object.y - object.height / 2 - cameraPos[1],
         object.width,
         object.height
       );
@@ -69,7 +69,7 @@ function drawObjects(objects) {
       ctx.closePath();
     }
 
-    if (object.type === "circle") {
+    if (object.type === "ball") {
       ctx.beginPath();
       ctx.arc(
         object.x - cameraPos[0],
@@ -117,84 +117,139 @@ function collideObjects(objects) {
     var pair = pairs[i];
     var object = objects[pair[0]];
     var object_ = objects[pair[1]];
-    if (!object.collision || !object_.collision) {
+    if (
+      !object.collision ||
+      !object_.collision ||
+      (object.freeze && object_.freeze)
+    ) {
       continue;
-    }
-    const deltaX = object_.x - object.x;
-    const deltaY = object_.y - object.y;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const overlap = object.radius + object_.radius - distance;
-    if (overlap > 0) {
-      collisions += 1;
-      a = Math.atan2(object_.y - object.y, object_.x - object.x);
-      if (object.freeze && object_.freeze) {
-        continue;
-      } else if (object.freeze) {
-        object_.x += overlap * Math.cos(a);
-        object_.y += overlap * Math.sin(a);
-      } else if (object_.freeze) {
-        object.x -= overlap * Math.cos(a);
-        object.y -= overlap * Math.sin(a);
-      } else {
-        const correctionRatio = overlap / distance;
-        object.x -= deltaX * correctionRatio;
-        object.y -= deltaY * correctionRatio;
-        object_.x += deltaX * correctionRatio;
-        object_.y += deltaY * correctionRatio;
-      }
-
-      const relativeVelocityX = object_.vx - object.vx;
-      const relativeVelocityY = object_.vy - object.vy;
-
-      const restitution_coef = Math.max(
-        object.restitution_coef,
-        object_.restitution_coef
-      );
-
-      const dotProduct =
-        deltaX * relativeVelocityX + deltaY * relativeVelocityY;
-
-      if (object.freeze) {
-        const impulse =
-          (2 * dotProduct) / (distance * (object_.mass + object_.mass));
-        const bounceX =
-          (impulse * object_.mass * deltaX) / distance +
-          restitution_coef * ((impulse * object_.mass * deltaX) / distance);
-        const bounceY =
-          (impulse * object_.mass * deltaY) / distance +
-          restitution_coef * ((impulse * object_.mass * deltaY) / distance);
-
-        object_.vx -= bounceX;
-        object_.vy -= bounceY;
-      } else if (object_.freeze) {
-        const impulse =
-          (2 * dotProduct) / (distance * (object.mass + object.mass));
-        const bounceX =
-          (impulse * object.mass * deltaX) / distance +
-          restitution_coef * ((impulse * object.mass * deltaX) / distance);
-        const bounceY =
-          (impulse * object.mass * deltaY) / distance +
-          restitution_coef * ((impulse * object.mass * deltaY) / distance);
-        object.vx += bounceX;
-        object.vy += bounceY;
-      } else {
-        const impulse =
-          (2 * dotProduct) / (distance * (object.mass + object_.mass));
-
-        object.vx +=
-          (impulse * object_.mass * deltaX * restitution_coef) / distance;
-        object.vy +=
-          (impulse * object_.mass * deltaY * restitution_coef) / distance;
-
-        object_.vx -=
-          (impulse * object.mass * deltaX * restitution_coef) / distance;
-        object_.vy -=
-          (impulse * object.mass * deltaY * restitution_coef) / distance;
-      }
+    } else if (object.type == object_.type && object.type == "ball") {
+      collideBalls(object, object_);
+    } else if (object.type == "ball" && object_.type == "box") {
+      collideBallBox(object, object_);
+    } else if (object.type == "box" && object_.type == "ball") {
+      collideBallBox(object_, object);
     }
   }
 }
 
+function collideBalls(ball, ball_) {
+  const deltaX = ball_.x - ball.x;
+  const deltaY = ball_.y - ball.y;
+  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+  const overlap = ball.radius + ball_.radius - distance;
+  if (overlap > 0) {
+    collisions += 1;
+    a = Math.atan2(ball_.y - ball.y, ball_.x - ball.x);
+    if (ball.freeze) {
+      ball_.x += overlap * Math.cos(a);
+      ball_.y += overlap * Math.sin(a);
+    } else if (ball_.freeze) {
+      ball.x -= overlap * Math.cos(a);
+      ball.y -= overlap * Math.sin(a);
+    } else {
+      const correctionRatio = overlap / distance;
+      ball.x -= deltaX * correctionRatio;
+      ball.y -= deltaY * correctionRatio;
+      ball_.x += deltaX * correctionRatio;
+      ball_.y += deltaY * correctionRatio;
+    }
+
+    const relativeVelocityX = ball_.vx - ball.vx;
+    const relativeVelocityY = ball_.vy - ball.vy;
+
+    const restitution_coef = Math.max(
+      ball.restitution_coef,
+      ball_.restitution_coef
+    );
+
+    const dotProduct = deltaX * relativeVelocityX + deltaY * relativeVelocityY;
+
+    if (ball.freeze) {
+      const impulse = (2 * dotProduct) / (distance * (ball_.mass + ball_.mass));
+      const bounceX =
+        (impulse * ball_.mass * deltaX) / distance +
+        restitution_coef * ((impulse * ball_.mass * deltaX) / distance);
+      const bounceY =
+        (impulse * ball_.mass * deltaY) / distance +
+        restitution_coef * ((impulse * ball_.mass * deltaY) / distance);
+
+      ball_.vx -= bounceX;
+      ball_.vy -= bounceY;
+    } else if (ball_.freeze) {
+      const impulse = (2 * dotProduct) / (distance * (ball.mass + ball.mass));
+      const bounceX =
+        (impulse * ball.mass * deltaX) / distance +
+        restitution_coef * ((impulse * ball.mass * deltaX) / distance);
+      const bounceY =
+        (impulse * ball.mass * deltaY) / distance +
+        restitution_coef * ((impulse * ball.mass * deltaY) / distance);
+      ball.vx += bounceX;
+      ball.vy += bounceY;
+    } else {
+      const impulse = (2 * dotProduct) / (distance * (ball.mass + ball_.mass));
+
+      ball.vx += (impulse * ball_.mass * deltaX * restitution_coef) / distance;
+      ball.vy += (impulse * ball_.mass * deltaY * restitution_coef) / distance;
+
+      ball_.vx -= (impulse * ball.mass * deltaX * restitution_coef) / distance;
+      ball_.vy -= (impulse * ball.mass * deltaY * restitution_coef) / distance;
+    }
+  }
+}
+
+function collideBallBox(ball, box) {
+  // Calculate the distances between the ball center and the box edges
+  const distX = Math.abs(ball.x - box.x) - box.width / 2 - ball.radius;
+  const distY = Math.abs(ball.y - box.y) - box.height / 2 - ball.radius;
+
+  let overlap = 0;
+
+  // Check if the ball is inside the box
+  if (distX < 0 && distY < 0) {
+    const dx = Math.min(distX, 0);
+    const dy = Math.min(distY, 0);
+    overlap = Math.sqrt(dx * dx + dy * dy);
+
+    // Move the ball out of the box
+    ball.x -= dx * (overlap / Math.abs(distX));
+    ball.y -= dy * (overlap / Math.abs(distY));
+  }
+
+  if (overlap > 0) {
+    collisions += 1;
+
+    // Calculate the relative velocity
+    const relativeVelocityX = ball.vx - box.vx;
+    const relativeVelocityY = ball.vy - box.vy;
+
+    // Calculate the restitution coefficient
+    const restitution_coef = Math.max(
+      ball.restitution_coef,
+      box.restitution_coef
+    );
+
+    // Calculate the normal vector and the tangential vector
+    const normalX = (ball.x - box.x) / box.width;
+    const normalY = (ball.y - box.y) / box.height;
+    const tangentialX = -normalY;
+    const tangentialY = normalX;
+
+    // Calculate the impulse
+    const dotProduct =
+      relativeVelocityX * normalX + relativeVelocityY * normalY;
+    const invMassSum = 1 / ball.mass + 1 / box.mass;
+    const j = (-(1 + restitution_coef) * dotProduct) / invMassSum;
+    const impulseX = j * normalX;
+    const impulseY = j * normalY;
+
+    // Apply the impulse
+    ball.vx += impulseX;
+    ball.vy += impulseY;
+    box.vx -= normalX * (impulseX / box.mass);
+    box.vy -= normalY * (impulseY / box.mass);
+  }
+}
 function gravityBetweenObjects(objects) {
   var pairs = new getPairs(objects);
   for (let i = 0; i < pairs.length; i++) {
@@ -246,10 +301,10 @@ function renderLoop() {
   document.getElementById("fps").innerText = fps.toFixed(2);
   document.getElementById("collisions").innerText = collisions;
   if (objects) {
-    cameraPos = [
-      objects[Object.keys(objects)[0]].x - canvas.width / 2,
-      objects[Object.keys(objects)[0]].y - canvas.height / 2,
-    ];
+    //    cameraPos = [
+    //      objects[Object.keys(objects)[0]].x - canvas.width / 2,
+    //      objects[Object.keys(objects)[0]].y - canvas.height / 2,
+    //    ];
   }
   drawObjects(objects);
   requestAnimationFrame(renderLoop);
