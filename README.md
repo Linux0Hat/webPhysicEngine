@@ -1,6 +1,7 @@
 # Web Physic Engine
 
-Web Physic Engine isphysic engine make in JavaScript for website.
+Web Physic Engine is a physic engine make in JavaScript for website.
+Test it on my website https://linuxhat.net/webPhysicEngine
 
 ## How to Use
 
