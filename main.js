@@ -11,6 +11,12 @@ var speed = 1;
 var gravityX = 0 * meterSize;
 var gravityY = 0 * meterSize;
 var cameraPos = [0, 0];
+var cameraFollow = false;
+
+function toFixed(num, fixed) {
+  var re = new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?');
+  return num.toString().match(re)[0];
+}
 
 async function Init() {
   function get_param(param) {
@@ -43,6 +49,7 @@ async function Init() {
     speed = data.speed;
     gravityX = data.gravityX * meterSize;
     gravityY = data.gravityY * meterSize;
+    cameraFollow = data.cameraFollow;
   } catch (erreur) {
     console.error("Error while loading JSON file: ", erreur.message);
   }
@@ -252,6 +259,7 @@ function collideBallBox(ball, box) {
 }
 function gravityBetweenObjects(objects) {
   var pairs = new getPairs(objects);
+  var text = "Forces :\n";
   for (let i = 0; i < pairs.length; i++) {
     var pair = pairs[i];
     var object = objects[pair[0]];
@@ -260,14 +268,16 @@ function gravityBetweenObjects(objects) {
     const deltaY = object_.y - object.y;
     const d = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / meterSize;
     var G = 6.674e-11;
-    var F = ((G * (object.mass * object_.mass)) / (d * d)) * meterSize;
+    var F = ((G * (object.mass * object_.mass)) / (d * d));
     var a = Math.atan2(deltaY, deltaX);
     var t = ((new Date().getTime() - Timer) / 1000) * speed;
     object.vx += F * t * Math.cos(a);
     object.vy += F * t * Math.sin(a);
     object_.vx -= F * t * Math.cos(a);
     object_.vy -= F * t * Math.sin(a);
+    text += `Force between ${pair[0]} and ${pair[1]} is ${toFixed(F,3)} N.\n`;
   }
+  document.getElementById("forces").innerText = text;
 }
 
 function getPairs(objects) {
@@ -300,7 +310,7 @@ function renderLoop() {
   var fps = 1000 / (new Date().getTime() - FpsTimer);
   document.getElementById("fps").innerText = fps.toFixed(2);
   document.getElementById("collisions").innerText = collisions;
-  if (objects) {
+  if (objects && cameraFollow) {
     cameraPos = [
       objects[Object.keys(objects)[0]].x - canvas.width / 2,
       objects[Object.keys(objects)[0]].y - canvas.height / 2,

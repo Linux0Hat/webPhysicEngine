@@ -3,6 +3,7 @@
   "speed": 1,
   "gravityX": 0,
   "gravityY": 0,
+  "cameraFollow": false,
   "objects": {
     "obj1": {
       "type": "ball",
